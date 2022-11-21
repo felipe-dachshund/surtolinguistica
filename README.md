@@ -1,4 +1,4 @@
-# surtolinguistica
+# SurtoLinguística
 Extrai palavras terminadas em vogal átona de áudio em português
 
 ## Protótipo
@@ -10,11 +10,11 @@ A ideia é criar um script auxiliar para extrair palavras terminadas em vogal á
 
 Para a transcrição do áudio e localização dos timestamps das palavras, pode-se usar o pacote [whisper](https://github.com/openai/whisper) e o script [stable-ts](https://github.com/jianfch/stable-ts) que modifica o modelo de língua utilizado pelo whisper. Para trabalhar com o TextGrid, talvez o módulo [textgrid](https://github.com/nltk/nltk_contrib/blob/master/nltk_contrib/textgrid.py) do [NLTK](https://www.nltk.org/) seja útil.
 
-[ ] Ler os limites de cada intervalo da trilha S1
-[ ] Fazer a transcrição de cada intervalo separadamente
-[ ] O tokenizador usado pelo whisper e pelo stable-ts não tokeniza corretamente em palavras; usar talvez o tokenizador do NLTK ou do Spacy
-[ ] Identificar se a palavra termina em vogal e se a última sílaba é átona
-[ ] Criar um novo TextGrid com uma trilha a mais, contendo as palavras terminadas em vogal átona
+- [ ] Ler os limites de cada intervalo da trilha S1
+- [ ] Fazer a transcrição de cada intervalo separadamente
+- [ ] O tokenizador usado pelo whisper e pelo stable-ts não tokeniza corretamente em palavras; usar talvez o tokenizador do NLTK ou do Spacy
+- [ ] Identificar se a palavra termina em vogal e se a última sílaba é átona
+- [ ] Criar um novo TextGrid com uma trilha a mais, contendo as palavras terminadas em vogal átona
 
 ## Setup para contribuidores
 Caso você queira contribuir com o projeto, além de fazer fork, clonar, etc., é preciso instalar algumas outras coisas, como o [FFmpeg](https://ffmpeg.org/), o [ffmpeg-python](https://github.com/kkroening/ffmpeg-python), o [PyTorch](https://pytorch.org/), os [transformers do Hugging Face](https://huggingface.co/docs/transformers/index), o [whisper](https://github.com/openai/whisper), o [NLTK](https://www.nltk.org/), a [área de contribuição do NLTK](https://github.com/nltk/nltk_contrib/) e o [stable-ts](https://github.com/jianfch/stable-ts). Você pode instalar estes pacotes e módulos pelo `pip` ou pelo [Anaconda](https://anaconda.org/). Como o projeto utiliza o PyTorch, o qual é instável e costuma apresentar conflito com outros pacotes e programas, recomenda-se criar um ambiente virtual para o projeto, seja por meio do Python, seja por meio do Anaconda. O Anaconda, além de criar ambientes virtuais, já vem com vários programas adicionais.
