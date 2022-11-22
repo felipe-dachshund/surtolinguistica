@@ -2,7 +2,7 @@ import whisper
 import stable_whisper
 from nltk_contrib import textgrid
 
-VOWELS = re.compile('[aeiou]')
+VOWELS = re.compile('[aeiouáàâéêíóôú]')
 
 def readS1ts(textgridfile):
     grid = textgrid.TextGrid.load(textgridfile)
@@ -12,10 +12,6 @@ def readS1ts(textgridfile):
             break
     #TODO: Read the xmin and xmax in each interval in S1.transcript
     return [(S1.xmin, S1.xmax)]
-
-def is_last_nontonic(word):
-    #TODO
-    return True
 
 class Interval:
     def __init__(self, name, xmin, xmax):
@@ -34,7 +30,7 @@ def extract(audio, model_size='small'):
     ts = 0.0
     for segment in transcript['segments']:
         for word in segment['whole_word_timestamps']:
-            if w != '' and VOWELS.match(w[-1].lower()) and is_last_nontonic(w):
+            if w != '' and w[-1] in 'aeo' and VOWELS.search(w[:-1]) and w not in 'ãõ':
                 new_tier.append(Interval(w, ts, word['timestamp']))
-            w = word['word'].strip() #TODO: strip non-alphabetic chars from start and end
+            w = word['word'].strip().lower() #TODO: strip non-alphabetic chars from start and end
             ts = word['timestamp']
