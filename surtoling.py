@@ -30,7 +30,7 @@ def extract(audio, model_size='small'):
     ts = 0.0
     for segment in transcript['segments']:
         for word in segment['whole_word_timestamps']:
-            if w != '' and w[-1] in 'aeo' and VOWELS.search(w[:-1]) and w not in 'ãõ':
+            if w != '' and w[-1] in 'aeo' and VOWELS.search(w[:-1]) and w[-2] not in 'ãõ':
                 new_tier.append(Interval(w, ts, word['timestamp']))
             w = word['word'].strip().lower() #TODO: strip non-alphabetic chars from start and end
             ts = word['timestamp']
