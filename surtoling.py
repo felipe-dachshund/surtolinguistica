@@ -1,6 +1,8 @@
+import re
 import whisper
 import stable_whisper
 from nltk_contrib import textgrid
+from sys import float_info
 
 VOWELS = re.compile('[aeiouáàâéêíóôú]')
 
@@ -25,12 +27,11 @@ def extract(audio, model_size='small'):
     model = whisper.load_model(model_size)
     stable_whisper.modify_model(model)
     transcript = model.transcribe(audio, language='pt')
+    word_transcript = stable_whisper.group_word_timestamps(transcript,
+        combine_compound=True, min_dur=float_info.epsilon)
     new_tier = []
-    w = ''
-    ts = 0.0
-    for segment in transcript['segments']:
-        for word in segment['whole_word_timestamps']:
-            if w != '' and w[-1] in 'aeo' and VOWELS.search(w[:-1]) and w[-2] not in 'ãõ':
-                new_tier.append(Interval(w, ts, word['timestamp']))
-            w = word['word'].strip().lower() #TODO: strip non-alphabetic chars from start and end
-            ts = word['timestamp']
+    for word in word_transcript:
+        w = word['text'].strip().lower() #TODO: strip non-alphabetic chars from start and end
+        if w != '' and w[-1] in 'aeo' and VOWELS.search(w[:-1]) and \
+          w[-2] not in 'ãõ':
+            new_tier.append(Interval(w, word['start'], word['end']))

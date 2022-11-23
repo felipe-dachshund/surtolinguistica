@@ -12,7 +12,7 @@ Para a transcrição do áudio e localização dos timestamps das palavras, pode
 
 - [ ] Ler os limites de cada intervalo da trilha S1
 - [ ] Fazer a transcrição de cada intervalo separadamente
-- [ ] O tokenizador usado pelo whisper e pelo stable-ts não tokeniza corretamente em palavras; usar talvez o tokenizador do NLTK ou do Spacy
+- [x] O tokenizador usado pelo whisper e pelo stable-ts não tokeniza corretamente em palavras. Usar talvez o tokenizador do NLTK ou do Spacy. Resolvido: o stable-ts possui uma solução satisfatória para sistemas de escrita que utilizam espaço para separar palavras.
 - [x] Identificar se a palavra termina em vogal e se a última sílaba é átona. Resolvido com heurística: a palavra tem grandes chances de ter mais de uma sílaba e terminar com vogal átona se terminar em 'a', 'e' ou 'o' não acentuados graficamente, tiver alguma outra vogal e a penúltima letra não for uma vogal nasalizada.
 - [ ] Criar um novo TextGrid com uma trilha a mais, contendo as palavras terminadas em vogal átona
 
