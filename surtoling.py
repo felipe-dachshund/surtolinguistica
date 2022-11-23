@@ -6,6 +6,7 @@ from nltk_contrib import textgrid
 from sys import float_info
 
 VOWELS = re.compile('[aeiouáàâéêíóôú]')
+WORD = re.compile('\w[\w-]*\w|\w')
 
 def readS1ts(textgridfile):
     grid = textgrid.TextGrid.load(textgridfile)
@@ -31,6 +32,9 @@ def loadS1audio(audio, S1_time_stamps):
     wavelet[i:] = 0
     return wavelet
 
+def word_strip(word):
+    return WORD.search(word.lower()).group(0)
+
 def extract(audio, model_size='small'):
     basename = audio[:audio.rfind('.')]
     S1ts = readS1ts(basename + '.TextGrid')
@@ -42,7 +46,7 @@ def extract(audio, model_size='small'):
       combine_compound=True, min_dur=float_info.epsilon)
     new_tier = []
     for word in word_transcript:
-        w = word['text'].strip().lower() #TODO: strip non-alphabetic chars from start and end
+        w = word_strip(word['text'])
         if w != '' and w[-1] in 'aeo' and VOWELS.search(w[:-1]) and \
           w[-2] not in 'ãõ':
             new_tier.append(Interval(w, word['start'], word['end']))
