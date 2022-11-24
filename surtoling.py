@@ -3,7 +3,7 @@ import whisper
 from whisper.audio import SAMPLE_RATE
 import stable_whisper
 from nltk_contrib import textgrid
-from sys import float_info
+import sys
 
 VOWELS = re.compile('[aeiouáàâéêíóôú]')
 WORD = re.compile('\w[\w-]*\w|\w')
@@ -33,17 +33,29 @@ def loadS1audio(audio, S1_time_stamps):
     return wavelet
 
 def word_strip(word):
-    return WORD.search(word.lower()).group(0)
+    word_match = WORD.search(word.lower())
+    if word_match:
+        return word_match.group(0)
+    return ''
 
 def extract(audio, model_size='small'):
+    def print_message(*message):
+        print(*message, file=sys.stderr)
+
+    if '.' not in audio:
+        audio += '.wav'
     basename = audio[:audio.rfind('.')]
     S1ts = readS1ts(basename + '.TextGrid')
+    print_message('Found', len(S1ts), 'S1 interval(s).')
+    print_message('Loading audio...')
     wavelet = loadS1audio(audio, S1ts)
+    print_message('Loading model...')
     model = whisper.load_model(model_size)
     stable_whisper.modify_model(model)
+    print_message('Transcribing...')
     transcript = model.transcribe(wavelet, verbose=False, language='pt')
     word_transcript = stable_whisper.group_word_timestamps(transcript,
-      combine_compound=True, min_dur=float_info.epsilon)
+      combine_compound=True, min_dur=sys.float_info.epsilon)
     new_tier = []
     for word in word_transcript:
         w = word_strip(word['text'])
