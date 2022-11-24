@@ -4,6 +4,7 @@ from whisper.audio import SAMPLE_RATE
 import stable_whisper as stable
 from nltk_contrib.textgrid import TextGrid
 import sys
+import argparse
 
 VOWELS = re.compile('[aeiouáàâéêíóôú]')
 WORD = re.compile('\w[\w-]*\w|\w')
@@ -123,3 +124,17 @@ def extract(audio, model_size='small'):
     new_textgrid.write(output)
     new_textgrid.close()
     print_message('New TextGrid saved to ' + new_textgrid_name)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(prog='surtoling',
+      description='Extrai palavras terminadas em vogal átona de áudio em ' + \
+      'português, guiando-se por um TextGrid de mesmo nome. Gera um novo ' + \
+      'TextGrid com as palavras extraídas.')
+    parser.add_argument('audiofile', metavar='AUDIOFILE',
+      help='audio file name/path. If extension is not given, .wav is assumed')
+    parser.add_argument('--model-size', default='small', metavar='SIZE',
+      choices=['tiny', 'base', 'small', 'medium', 'large'],
+      help='size of the trained model. It can be one of tiny, base, small, ' + \
+      'medium or large. More info at https://github.com/openai/whisper')
+    args = parser.parse_args()
+    extract(args.audiofile, model_size=args.model_size)
