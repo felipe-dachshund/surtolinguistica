@@ -12,14 +12,28 @@ def readS1ts(textgridfile):
     grid = textgrid.TextGrid.load(textgridfile)
     for tier in grid.tiers:
         if tier.tier_name() == 'S1':
-            S1 = tier
+            S1 = tier.transcript.splitlines()
             break
-    #TODO: Read the xmin and xmax in each interval in S1.transcript
-    return [(S1.xmin, S1.xmax)]
+
+    keyval_pat = re.compile('\s+(\w+)\s*=\s*(\S+)')
+    keyval_dict = {'xmin': 0.0, 'xmax': 0.0, 'text': ''}
+    S1ts = []
+    for line in S1:
+        m = keyval_pat.match(line)
+        if m:
+            if m.group(1) == 'text':
+                keyval_dict['text'] = m.group(2)[1:-1]
+            else:
+                keyval_dict[m.group(1)] = float(m.group(2))
+        elif keyval_dict['text'] != '':
+            S1ts.append((keyval_dict['xmin'], keyval_dict['xmax']))
+    if keyval_dict['text'] != '':
+        S1ts.append((keyval_dict['xmin'], keyval_dict['xmax']))
+    return S1ts
 
 class Interval:
-    def __init__(self, name, xmin, xmax):
-        self.name = name
+    def __init__(self, text, xmin, xmax):
+        self.text = text
         self.xmin = xmin
         self.xmax = xmax
 
